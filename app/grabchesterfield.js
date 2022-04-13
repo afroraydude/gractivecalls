@@ -49,6 +49,9 @@ async function loadPageChesterfield(isPD) {
       return columns.map(column => column.innerText);
     });
   })
+  // close the page now that we have the data
+  await page.close();
+
   for (const row of result) {
     if (row.length === 1) {
       // do nothing

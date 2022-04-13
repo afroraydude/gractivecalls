@@ -24,6 +24,10 @@ async function grabHenrico() {
       return columns.map(column => column.innerText);
     });
   })
+
+  // close the page now that we have the data
+  await page.close();
+
   for (const row of result) {
     let location = row[1]
     let time = new Date().setHours(row[2].split(':')[0], row[2].split(':')[1], 0, 0);
