@@ -40,14 +40,17 @@ async function UpdateDbWithCall(call) {
 }
 
 async function cleanOldCalls(keys, district) {
+  let removedCalls = []
   let calls = await Call.find({district: district, status: {$ne: "Closed"}});
   for (let i = 0; i < calls.length; i++) {
     let call = calls[i];
     if (keys.indexOf(call._id) === -1) {
+      removedCalls.push(call._id);
       call.status = "Closed";
-      call = await Call.findByIdAndUpdate(call._id, call, {upsert: true, new: true});
+      call = await Call.findByIdAndUpdate(call._id, call, {upsert: true});
     }
   }
+  console.log(`Removed ${removedCalls.length} calls from ${district}`);
 }
 
 // Sends the call to the OneSignal API
