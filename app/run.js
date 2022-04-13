@@ -17,12 +17,16 @@ async function cG() {
   console.log("Grabbed Chesterfield");
 }
 
-async function runGrabbers() {
-  // run all grabbers in parallel and wait for them to finish
-  // then wait 60 seconds, then run all grabbers again
+async function internalRun() {
+  console.log("Grabbing calls");
   await Promise.all([rG(), hG(), cG()]);
-  console.log("Grabbers finished");
-  setTimeout(runGrabbers, 60000);
+  console.log("Grabbed all calls");
+}
+
+
+function runGrabbers() {
+  // call internalRun() every minute
+  setInterval(internalRun, 60000);
 }
 
 module.exports = runGrabbers;
