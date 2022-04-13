@@ -2,10 +2,25 @@ const puppeteer = require('puppeteer');
 const Call = require('./../models/newcall');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
-const UpdateDbWithCall = require('./databaseHelper');
-let keys = new Array();
+const {UpdateDbWithCall, cleanOldCalls} = require("./databaseHelper");
+let keys = [];
 let browser;
 
+function cleanAddress(location) {
+  // get the first part of the location
+  var temp = location.split(" ")[0];
+  // if the first character in temp is a number
+  if (!isNaN(temp[0])) {
+    // replace all X's with 0's
+    temp = temp.replace(/X/g, "0");
+
+    // remove the first part of location and add it back with the new temp
+    location = location.replace(location.split(" ")[0], temp);
+  }
+  return location;
+}
+
+// Loads a new Chrome Page for the given call to grab from the website
 async function loadPageChesterfield(isPD) {
   let incident;
   let time;
@@ -38,7 +53,7 @@ async function loadPageChesterfield(isPD) {
     if (row.length === 1) {
       // do nothing
     } else {
-      const location = row[2];
+      const location = cleanAddress(row[2]);
       time = new Date(row[3]);
       incident = row[4];
       hash = crypto.createHash('md5').update(row[3] + row[1] + row[4] + row[2]).digest("hex");
@@ -62,35 +77,14 @@ async function grabChesterfield() {
     headless: true
   });
 
+  // load calls
   await loadPageChesterfield(true);
   await loadPageChesterfield(false);
 
   await browser.close();
 
   // close any calls that are still open that were not found in the new results
-  // TODO: lower the amount of calls to check through when closing calls
-  Call.find({
-    "district": "Chesterfield"
-  }, (err, calls) => {
-    calls.forEach(call => {
-      // if the call is not in the new results, close it
-      if (!keys.includes(call._id)) {
-        call.status = "Closed";
-      } else {
-        // get the first part of the location
-        var temp = call.location.split(" ")[0];
-        // if the first character in temp is a number
-        if (!isNaN(temp[0])) {
-          // replace all X's with 0's
-          temp = temp.replace(/X/g, "0");
-
-          // remove the first part of location and add it back with the new temp
-          call.location = call.location.replace(call.location.split(" ")[0], temp);
-        }
-      }
-      call.save();
-    })
-  })
+  await cleanOldCalls(keys, "Chesterfield");
 }
 
 

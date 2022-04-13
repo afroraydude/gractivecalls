@@ -3,7 +3,7 @@ const Call = require('./../models/newcall');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
 const fs = require('fs');
-const UpdateDbWithCall = require("./databaseHelper");
+const {UpdateDbWithCall, cleanOldCalls} = require("./databaseHelper");
 
 async function grabHenrico() {
   let keys = [];
@@ -56,20 +56,7 @@ async function grabHenrico() {
   await browser.close();
 
   // close any calls that are still open that were not found in the new results
-  // TODO: lower the amount of calls to check through when closing calls
-  Call.find({
-    "district": "Henrico",
-    "status": {
-      "$ne": "Closed"
-    }
-  }, (err, calls) => {
-    calls.forEach(call => {
-      if (keys.indexOf(call._id) === -1) {
-        call.status = "Closed";
-        call.save();
-      }
-    })
-  })
+  await cleanOldCalls(keys, "Henrico");
 }
 
 module.exports = grabHenrico;

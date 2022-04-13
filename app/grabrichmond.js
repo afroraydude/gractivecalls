@@ -5,7 +5,7 @@ const csv = require("csv-parser");
 const fs = require('fs');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
-const UpdateDbWithCall = require("./databaseHelper");
+const {UpdateDbWithCall, cleanOldCalls} = require("./databaseHelper");
 
 async function downloadCsv() {
   const browser = await puppeteer.launch({
@@ -51,23 +51,9 @@ async function grabRichmond() {
     .on('end', () => {
       fs.unlinkSync(file);
     });
-  Call.find({
-    "district": "Richmond",
-    "status": {
-      "$ne": "Closed"
-    }
-  }, (err, calls) => {
-    calls.forEach(call => {
-      if (keys.indexOf(call._id) === -1) {
-        call.status = "Closed";
-        Call.findByIdAndUpdate(call._id, call).exec((err, call) => {
-          if (err) {
-            console.log(err);
-          }
-        });
-      }
-    })
-  })
+
+  // clean old calls
+  await cleanOldCalls(keys, "Richmond");
 }
 
 module.exports = grabRichmond;
