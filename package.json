@@ -1,0 +1,19 @@
+{
+  "name": "gractivecalls-node",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^6.2.0",
+    "helmet": "^5.0.2",
+    "json2csv": "^5.0.6",
+    "mongoose": "^6.1.8",
+    "node-fetch": "2",
+    "puppeteer": "^13.1.2"
+  }
+}

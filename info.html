@@ -1,0 +1,41 @@
+<h1>Welcome to the Active Calls API.</h1>
+
+<p>
+  <strong>Please note, all requests should be GET requests. Any other request type is not supported and will return a 404.</strong>
+  <br />
+  Usage:
+  <ul>
+    <li>/api/active - returns a list of active calls based on data from upstream</li>
+    <li>/api/calls - returns a list of the most recent calls in the system. Presented in JSON.
+      <br />
+      Optional parameters:
+      <ul>
+        <li>?count=&ltnumber&gt - returns the specified number of calls (defaults to 10, max 100)</li>
+        <li>?fromDate=&ltdate&gt - returns calls during or after the specified date (defaults to UNIX epoch)</li>
+        <li>?toDate=&ltdate&gt - returns calls before or during the specified date (defaults to current date)</li>
+        <li>?district=&ltdistrict&gt - returns calls for the specified district (defaults to all districts)</li>
+        <li>?agency=&ltagency&gt - returns calls for the specified agency (defaults to all agencies)</li>
+      </ul>
+    </li>
+
+    <li>/api/calls.csv - returns a CSV of the most recent calls in the system.
+      <br />
+      Optional parameters:
+      <ul>
+        <li>?count=&ltnumber&gt - returns the specified number of calls (defaults to 10, max 100)</li>
+        <li>?fromDate=&ltdate&gt - returns calls during or after the specified date (defaults to UNIX epoch)</li>
+        <li>?toDate=&ltdate&gt - returns calls before or during the specified date (defaults to current date)</li>
+        <li>?district=&ltdistrict&gt - returns calls for the specified district (defaults to all districts)</li>
+        <li>?agency=&ltagency&gt - returns calls for the specified agency (defaults to all agencies)</li>
+      </ul>
+    </li>
+
+
+    <li>/api/since?minutes=&ltnumber&gt - returns a list of calls since the specified number of minutes ago. Presented
+      in JSON.</li>
+
+    <li>/api/today - returns a list of calls for today. Presented in JSON.</li>
+
+    <li>/api/today.csv - returns a CSV of calls for today.</li>
+  </ul>
+</p>
