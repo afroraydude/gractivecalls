@@ -26,6 +26,7 @@ async function internalRun() {
 
 function runGrabbers() {
   // call internalRun() every minute
+  internalRun().then(console.log("first run done"));
   setInterval(internalRun, 60000);
 }
 
